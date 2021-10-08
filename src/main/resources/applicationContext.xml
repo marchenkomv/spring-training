@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/data/jpa https://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <jpa:repositories base-package="com.example.demo.repository"/>
+
+    <bean id="aggregationSum" class="com.example.demo.service.AggregationSum">
+        <constructor-arg name="repository" ref="intValueRepository"/>
+    </bean>
+
+    <bean id="aggregationMin" class="com.example.demo.service.AggregationMin">
+        <constructor-arg name="repository" ref="intValueRepository"/>
+    </bean>
+
+    <bean id="aggregationMax" class="com.example.demo.service.AggregationMax">
+        <constructor-arg name="repository" ref="intValueRepository"/>
+    </bean>
+
+    <bean id="aggregationAvg" class="com.example.demo.service.AggregationAvg">
+        <constructor-arg name="repository" ref="intValueRepository"/>
+    </bean>
+
+    <util:map id="operations" map-class="java.util.HashMap"
+              key-type="java.lang.String"
+              value-type="com.example.demo.service.Aggregation">
+        <entry key="sum" value-ref="aggregationSum"/>
+        <entry key="min" value-ref="aggregationMin"/>
+        <entry key="max" value-ref="aggregationMax"/>
+        <entry key="avg" value-ref="aggregationAvg"/>
+    </util:map>
+
+    <bean id="intValueService" class="com.example.demo.service.IntValueService">
+        <constructor-arg name="repository" ref="intValueRepository"/>
+        <property name="operations" ref="operations"/>
+    </bean>
+
+</beans>
